@@ -1,7 +1,38 @@
 ### Demo project accompanying a [Consul crash course video](https://www.youtube.com/watch?v=s3I1kKKfjtQ) on YouTube
 
+---
 
-Terraform commands to execute the script
+## Todo - Setup Instructions
+
+1. **Clone the project**
+
+```
+git clone https://github.com/GGWPXXXX/Service-Mesh-with-HashiCorp-Consul
+```
+
+(this repo was forked manually from GitLab)
+
+2. **Create a `terraform.tfvars` file** in the terraform directory.  
+   Add your AWS credentials like this:
+
+```hcl
+aws_access_key_id     = "YOUR_AWS_ACCESS_KEY_ID"
+aws_secret_access_key = "YOUR_AWS_SECRET_ACCESS_KEY"
+```
+
+👉 **Note:**  
+You need AWS credentials with permissions to:
+
+- Manage EC2 (VPCs, subnets, security groups)
+- Manage EKS (clusters and nodegroups)
+- Manage IAM (roles and policies)
+- Manage CloudWatch Logs
+
+If unsure, attach the **AdministratorAccess** policy to your IAM user.
+
+---
+
+## Terraform commands to execute the script
 
 ```sh
 # initialise project & download providers
@@ -23,7 +54,8 @@ terraform destroy
 terraform state list
 ```
 
-#### Get access to EKS cluster
+## Get access to EKS cluster
+
 ```sh
 # install and configure awscli with access creds
 aws configure
