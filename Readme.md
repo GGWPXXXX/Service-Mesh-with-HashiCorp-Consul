@@ -30,23 +30,50 @@ You need AWS credentials with permissions to:
 
 If unsure, attach the **AdministratorAccess** policy to your IAM user.
 
-3.  **Create kubeconfig file for cluster in ~/.kube**
+## Create K8S Cluster on AWS EKS
 
-    ```
-    aws eks update-kubeconfig --region ap-southeast-1 --name myapp-eks-cluster
-    ```
+1. **Make sure you in the terraform directory.**
 
-4.  **Check connection to the cluster**
+2. **Initialize terraform**
 
-    ```
-    kubectl get node
-    ```
+   ```
+   terraform init
+   ```
 
-you should see 3 working nodes.
+3. **Create the cluster**
+
+   ```
+   terraform apply -var-file terraform.tfvars
+   ```
+
+   This will create a new EKS cluster with 3 nodes in the `ap-southeast-1` region.
+   You can change the region in the `variables.tf` file.
+
+4. **Configure AWS CLI**
+
+   Make sure you have the AWS CLI installed and configured with your credentials.
+
+   ```
+   aws configure
+   ```
+
+5. **Create kubeconfig file for cluster in ~/.kube**
+
+   ```
+   aws eks update-kubeconfig --region ap-southeast-1 --name myapp-eks-cluster
+   ```
+
+6. **Check connection to the cluster**
+
+   ```
+   kubectl get node
+   ```
+
+   **You should see 3 working nodes.**
 
 ---
 
-## Deployment
+## Deploy Microservices application into K8S cluster
 
 1. **Make sure you in the kubernetes directory.**
 2. **Apply kubernetes config file.**
@@ -65,12 +92,21 @@ you should see 3 working nodes.
 
 1. **Make sure you in the kubernetes directory.**
 
-2. **Add & Install Consul**
+2. **Install Helm CLI**
+
+   ```
+   choco install kubernetes-helm
+   ```
+
+   (or use the [Helm installation guide](https://helm.sh/docs/intro/install/) for your OS)
+   Make sure you have the latest version of Helm installed.
+
+3. **Add & Install Consul**
    ```
    helm repo add hashicorp https://helm.releases.hashicorp.com
    helm install eks hashicorp/consul --version 1.0.0 --values consul-values.yaml --set global.datacenter=eks
    ```
-3. **Check for the consul status in the pod**
+4. **Check for the consul status in the pod**
    ```
    kubectl get pod
    ```
