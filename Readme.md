@@ -6,19 +6,19 @@
 
 1. **Clone the project**
 
-```
-git clone https://github.com/GGWPXXXX/Service-Mesh-with-HashiCorp-Consul
-```
+   ```
+   git clone https://github.com/GGWPXXXX/Service-Mesh-with-HashiCorp-Consul
+   ```
 
-(this repo was forked manually from GitLab)
+(this repo was forked manually from [GitLab](https://gitlab.com/twn-youtube/consul-crash-course) )
 
 2. **Create a `terraform.tfvars` file** in the terraform directory.  
    Add your AWS credentials like this:
 
-```hcl
-aws_access_key_id     = "YOUR_AWS_ACCESS_KEY_ID"
-aws_secret_access_key = "YOUR_AWS_SECRET_ACCESS_KEY"
-```
+   ```hcl
+   aws_access_key_id     = "YOUR_AWS_ACCESS_KEY_ID"
+   aws_secret_access_key = "YOUR_AWS_SECRET_ACCESS_KEY"
+   ```
 
 👉 **Note:**  
 You need AWS credentials with permissions to:
@@ -30,7 +30,51 @@ You need AWS credentials with permissions to:
 
 If unsure, attach the **AdministratorAccess** policy to your IAM user.
 
+3.  **Create kubeconfig file for cluster in ~/.kube**
+
+    ```
+    aws eks update-kubeconfig --region ap-southeast-1 --name myapp-eks-cluster
+    ```
+
+4.  **Check connection to the cluster**
+
+    ```
+    kubectl get node
+    ```
+
+you should see 3 working nodes.
+
 ---
+
+## Deployment
+
+1. **Make sure you in the kubernetes directory.**
+2. **Apply kubernetes config file.**
+
+   ```
+   kubectl apply -f config.yaml
+   ```
+
+3. **Check status of the pods**
+
+   ```
+   kubectl get pod
+   ```
+
+## Deployment Consul on EKS
+
+1. **Make sure you in the kubernetes directory.**
+
+2. **Add & Install Consul**
+   ```
+   helm repo add hashicorp https://helm.releases.hashicorp.com
+   helm install eks hashicorp/consul --version 1.0.0 --values consul-values.yaml --set global.datacenter=eks
+   ```
+3. **Check for the consul status in the pod**
+   ```
+   kubectl get pod
+   ```
+   You should see eks-consul-\* up and running.
 
 ## Terraform commands to execute the script
 
